@@ -28,6 +28,10 @@ type header struct {
 	gridHeight       int16
 }
 
+func (h *header) String() string {
+	return fmt.Sprintf("header &{size: %d, frameCount: %d, dimensions: %dx%d, depth: %d, flags: %d, speed: %d, next: %d, frit: %d, transparentIndex: %d, ncolors: %d, pixelDimensions: %dx%d, gridPos: %dx%d, gridDimensions: %dx%d}", h.size, h.frameCount, h.width, h.height, h.depth, h.flags, h.speed, h.next, h.frit, h.transparentIndex, h.ncolors, h.pixelWidth, h.pixelHeight, h.gridX, h.gridY, h.gridWidth, h.gridHeight)
+}
+
 func readHeader(f *os.File) (*header, error) {
 	var err error
 	h := &header{}
@@ -121,7 +125,7 @@ func readHeader(f *os.File) (*header, error) {
 		h.pixelHeight = 1
 		h.pixelWidth = 1
 	}
-	_, err = f.Seek(128, 1)
+	_, err = f.Seek(128, 0)
 	if err != nil {
 		return nil, fmt.Errorf("header offset: %w", err)
 	}

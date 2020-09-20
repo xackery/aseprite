@@ -4,6 +4,8 @@ import (
 	"encoding/binary"
 	"fmt"
 	"os"
+
+	"github.com/xackery/log"
 )
 
 type layer struct {
@@ -50,6 +52,7 @@ const (
 )
 
 func readLayerChunk(f *os.File, headerFlags uint32, prevLayer *layer, currentLevel int16) (*layer, error) {
+	log := log.New()
 	var err error
 	layer := new(layer)
 
@@ -82,10 +85,11 @@ func readLayerChunk(f *os.File, headerFlags uint32, prevLayer *layer, currentLev
 	if err != nil {
 		return nil, fmt.Errorf("opacity: %w", err)
 	}
-	_, err = f.Seek(5, 1)
+	_, err = f.Seek(3, 1)
 	if err != nil {
 		return nil, fmt.Errorf("seek name: %w", err)
 	}
+
 	name, err := readString(f)
 	if err != nil {
 		return nil, fmt.Errorf("name: %w", err)
@@ -101,7 +105,6 @@ func readLayerChunk(f *os.File, headerFlags uint32, prevLayer *layer, currentLev
 			}
 		}
 	case 1: //ASE_FILE_LAYER_GROUP
-
 	default:
 		return nil, nil
 	}
@@ -118,6 +121,6 @@ func readLayerChunk(f *os.File, headerFlags uint32, prevLayer *layer, currentLev
 		}
 	}
 	currentLevel = childLevel
-
+	log.Debug().Msgf("layer: %v", layer)
 	return layer, nil
 }

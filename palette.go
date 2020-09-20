@@ -13,19 +13,19 @@ type palette struct {
 
 func readPaletteChunk(f *os.File, frameIndex uint16, flags uint32) (*palette, error) {
 	var err error
-	var newSize int
+	var newSize int32
 	err = binary.Read(f, binary.LittleEndian, &newSize)
 	if err != nil {
 		return nil, fmt.Errorf("newSize: %w", err)
 	}
 
-	var from int
+	var from int32
 	err = binary.Read(f, binary.LittleEndian, &from)
 	if err != nil {
 		return nil, fmt.Errorf("from: %w", err)
 	}
 
-	var to int
+	var to int32
 	err = binary.Read(f, binary.LittleEndian, &to)
 	if err != nil {
 		return nil, fmt.Errorf("to: %w", err)

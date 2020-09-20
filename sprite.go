@@ -1,5 +1,7 @@
 package main
 
+import "image"
+
 const (
 	pixelFormatNone = iota
 	pixelFormatIMAGERGB
@@ -18,8 +20,10 @@ type sprite struct {
 	transparentIndex uint8
 	colorSpace       int
 	pixelRatio       float32
+	gridBounds       image.Rectangle
 	tags             []*tag
 	slices           []*slice
+	rootLayer        *layer
 }
 
 func (s *sprite) pixelFormat() {

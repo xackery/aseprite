@@ -11,7 +11,7 @@ type cel struct {
 	positionX   int16
 	positionY   int16
 	opacity     int8
-	img         image.Image
+	img         *image.RGBA
 	frameIndex  uint16
 	boundsFixed image.Rectangle
 	userData    *userData
@@ -50,7 +50,7 @@ func readCelChunk(f *os.File, layers []*layer, frameIndex uint16, chunkSize uint
 		return nil, fmt.Errorf("seek celType: %w", err)
 	}
 
-	if layerIndex <= 0 {
+	if layerIndex < 0 {
 		return nil, fmt.Errorf("invalid layer index %d", layerIndex)
 	}
 	if len(layers) <= int(layerIndex) {
@@ -60,7 +60,7 @@ func readCelChunk(f *os.File, layers []*layer, frameIndex uint16, chunkSize uint
 	if !layer.isImage {
 		return nil, fmt.Errorf("layer %d does not contain image", layerIndex)
 	}
-	var img image.Image
+	var img *image.RGBA
 	switch celType {
 	case 0: //ASE_FILE_RAW_CEL
 		var w int16
@@ -73,6 +73,7 @@ func readCelChunk(f *os.File, layers []*layer, frameIndex uint16, chunkSize uint
 		if err != nil {
 			return nil, fmt.Errorf("raw_cel h: %w", err)
 		}
+
 		if w > 0 && h > 0 {
 			img, err = readRawImage(f, pixelFormatIMAGERGB, w, h, pal)
 			if err != nil {
@@ -101,8 +102,6 @@ func readCelChunk(f *os.File, layers []*layer, frameIndex uint16, chunkSize uint
 		c.opacity = link.opacity
 		c.frameIndex = frameIndex
 	case 2: //ASE_FILE_COMPRESSED_CEL
-		return nil, fmt.Errorf("compressed images not supported")
-	/*
 		var w int16
 		err = binary.Read(f, binary.LittleEndian, &w)
 		if err != nil {
@@ -113,18 +112,19 @@ func readCelChunk(f *os.File, layers []*layer, frameIndex uint16, chunkSize uint
 		if err != nil {
 			return nil, fmt.Errorf("compressed_cel h: %w", err)
 		}
-		if w > 0 && h > 0 {
-			img, err = readCompressedImage(f, pixelFormatIMAGERGB, w, h, pal)
-			if err != nil {
-				return nil, fmt.Errorf("raw_cel readImage: %w", err)
-			}
+		if w <= 0 || h <= 0 {
+			return nil, fmt.Errorf("compressed_cel %dx%d is invalid", w, h)
+		}
+
+		img, err = readCompressedImage(f, pixelFormatIMAGERGB, w, h, chunkSize, pal)
+		if err != nil {
+			return nil, fmt.Errorf("raw_cel readImage: %w", err)
 		}
 		c.positionX = x
 		c.positionY = y
 		c.frameIndex = frameIndex
 		c.opacity = opacity
 		c.img = img
-	*/
 	default:
 		return nil, fmt.Errorf("unknown celType %d", celType)
 	}
