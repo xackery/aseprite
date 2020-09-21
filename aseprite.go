@@ -19,7 +19,7 @@ func Load(path string) (*Sprite, error) {
 		return nil, err
 	}
 	defer f.Close()
-	s, err := decode(f)
+	s, err := Decode(f)
 	if err != nil {
 		return nil, fmt.Errorf("decode: %w", err)
 	}
@@ -27,7 +27,8 @@ func Load(path string) (*Sprite, error) {
 	return s, nil
 }
 
-func decode(f *os.File) (*Sprite, error) {
+// Decode will decode provided asperite file
+func Decode(f *os.File) (*Sprite, error) {
 	log := log.New()
 	isIgnoreOldColorChunks := false
 	header, err := readHeader(f)
