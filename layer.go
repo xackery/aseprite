@@ -11,10 +11,10 @@ import (
 // Layer represents layers of a sprite
 type Layer struct {
 	isImage   bool
-	blendMode int16
-	name      string
-	opacity   int8
-	flags     int16
+	BlendMode int16
+	Name      string
+	Opacity   int8
+	Flags     int16
 	parents   []*Layer
 	layers    []*Layer
 	Cells     []*Cell
@@ -100,9 +100,9 @@ func readLayerChunk(f io.ReadSeeker, headerFlags uint32, prevLayer *Layer, curre
 	case 0: //ASE_FILE_LAYER_IMAGE
 		layer.isImage = true
 		if flags&8 != 8 { //8 = background
-			layer.blendMode = blendMode
+			layer.BlendMode = blendMode
 			if headerFlags&1 == 1 { //ASE_FILE_FLAG_LAYER_WITH_OPACITY
-				layer.opacity = opacity
+				layer.Opacity = opacity
 			}
 		}
 	case 1: //ASE_FILE_LAYER_GROUP
@@ -110,8 +110,8 @@ func readLayerChunk(f io.ReadSeeker, headerFlags uint32, prevLayer *Layer, curre
 		return nil, nil
 	}
 
-	layer.flags = flags
-	layer.name = name
+	layer.Flags = flags
+	layer.Name = name
 	if prevLayer != nil {
 		if childLevel == currentLevel {
 			prevLayer.parents = append(prevLayer.parents, layer)
