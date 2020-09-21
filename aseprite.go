@@ -9,7 +9,7 @@ import (
 	"github.com/xackery/log"
 )
 
-// Load loads a spite
+// Load loads a sprite
 func Load(path string) (*Sprite, error) {
 	log := log.New()
 	//path := "examples/_default.aseprite"

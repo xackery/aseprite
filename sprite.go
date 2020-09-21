@@ -27,7 +27,3 @@ type Sprite struct {
 	rootLayer        *layer
 	layers           []*layer
 }
-
-func (s *Sprite) pixelFormat() {
-
-}
