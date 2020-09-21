@@ -9,11 +9,11 @@ import (
 
 // Tag represents animation groupings
 type Tag struct {
-	from               int16
-	to                 int16
-	name               string
-	color              color.RGBA
-	animationDirection int8
+	From               int16
+	To                 int16
+	Name               string
+	Color              color.RGBA
+	AnimationDirection int8
 }
 
 func readTagChunk(f io.ReadSeeker, s *Sprite) error {
@@ -31,11 +31,11 @@ func readTagChunk(f io.ReadSeeker, s *Sprite) error {
 	}
 	for c := int16(0); c < tagCount; c++ {
 		t := new(Tag)
-		err = binary.Read(f, binary.LittleEndian, &t.from)
+		err = binary.Read(f, binary.LittleEndian, &t.From)
 		if err != nil {
 			return fmt.Errorf("from: %w", err)
 		}
-		err = binary.Read(f, binary.LittleEndian, &t.to)
+		err = binary.Read(f, binary.LittleEndian, &t.To)
 		if err != nil {
 			return fmt.Errorf("to: %w", err)
 		}
@@ -49,7 +49,7 @@ func readTagChunk(f io.ReadSeeker, s *Sprite) error {
 			aniDir != 2 { //ping pong
 			aniDir = 0
 		}
-		t.animationDirection = aniDir
+		t.AnimationDirection = aniDir
 		_, err = f.Seek(8, 1)
 		if err != nil {
 			return fmt.Errorf("seek rgb: %w", err)
@@ -69,12 +69,12 @@ func readTagChunk(f io.ReadSeeker, s *Sprite) error {
 		if err != nil {
 			return fmt.Errorf("b: %w", err)
 		}
-		t.color = color.RGBA{R: r, G: g, B: b, A: 255}
+		t.Color = color.RGBA{R: r, G: g, B: b, A: 255}
 		_, err = f.Seek(1, 1)
 		if err != nil {
 			return fmt.Errorf("seek name: %w", err)
 		}
-		t.name, err = readString(f)
+		t.Name, err = readString(f)
 		if err != nil {
 			return fmt.Errorf("name: %w", err)
 		}
