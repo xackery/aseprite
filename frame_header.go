@@ -133,7 +133,7 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 			}
 		case 0x2005: //ASE_FILE_CHUNK_CEL
 			log.Debug().Msgf("readCelChunk 0x%x", pos)
-			cel, err := readCellChunk(f, s.Layers, frameIndex, chunkSize, pal)
+			cel, err := readCellChunk(f, s.Layers, frameIndex, chunkSize, pal, h.duration)
 			if err != nil {
 				return fmt.Errorf("readCelChunk %d: %w", chunkIndex, err)
 			}

@@ -18,14 +18,16 @@ type Cell struct {
 	Image       *image.RGBA
 	frameIndex  uint16
 	boundsFixed image.Rectangle
+	Duration    uint16
 	userData    *userData
 	EbitenImage *ebiten.Image
 }
 
-func readCellChunk(f io.ReadSeeker, layers []*Layer, frameIndex uint16, chunkSize uint32, pal *palette) (*Cell, error) {
+func readCellChunk(f io.ReadSeeker, layers []*Layer, frameIndex uint16, chunkSize uint32, pal *palette, duration uint16) (*Cell, error) {
 	log := log.New()
 	var err error
 	c := new(Cell)
+	c.Duration = duration
 	var layerIndex int16
 
 	err = binary.Read(f, binary.LittleEndian, &layerIndex)
