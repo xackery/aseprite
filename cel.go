@@ -1,4 +1,4 @@
-package main
+package aseprite
 
 import (
 	"encoding/binary"

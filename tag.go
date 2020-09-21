@@ -1,4 +1,4 @@
-package main
+package aseprite
 
 import (
 	"encoding/binary"
@@ -8,15 +8,17 @@ import (
 )
 
 type tag struct {
+	from               int16
+	to                 int16
 	name               string
 	color              color.RGBA
 	animationDirection int8
 }
 
-func readTagsChunk(f *os.File, s *sprite) error {
+func readTagChunk(f *os.File, s *Sprite) error {
 	var err error
 	var tagCount int16
-	t := new(tag)
+
 	err = binary.Read(f, binary.LittleEndian, &tagCount)
 	if err != nil {
 		return fmt.Errorf("tagCount: %w", err)
@@ -27,13 +29,12 @@ func readTagsChunk(f *os.File, s *sprite) error {
 		return fmt.Errorf("seek tags: %w", err)
 	}
 	for c := int16(0); c < tagCount; c++ {
-		var from int16
-		err = binary.Read(f, binary.LittleEndian, &from)
+		t := new(tag)
+		err = binary.Read(f, binary.LittleEndian, &t.from)
 		if err != nil {
 			return fmt.Errorf("from: %w", err)
 		}
-		var to int16
-		err = binary.Read(f, binary.LittleEndian, &to)
+		err = binary.Read(f, binary.LittleEndian, &t.to)
 		if err != nil {
 			return fmt.Errorf("to: %w", err)
 		}

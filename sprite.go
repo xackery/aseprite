@@ -1,4 +1,4 @@
-package main
+package aseprite
 
 import "image"
 
@@ -10,7 +10,8 @@ const (
 	pixelFormatIMAGEBITMAP
 )
 
-type sprite struct {
+// Sprite represents an aseprite sprite file
+type Sprite struct {
 	frameCount       uint16
 	width            uint16
 	height           uint16
@@ -27,6 +28,6 @@ type sprite struct {
 	layers           []*layer
 }
 
-func (s *sprite) pixelFormat() {
+func (s *Sprite) pixelFormat() {
 
 }

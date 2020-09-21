@@ -1,4 +1,4 @@
-package main
+package aseprite
 
 import (
 	"encoding/binary"
@@ -23,7 +23,7 @@ func (ud userData) set(val userData) {
 	}
 }
 
-func readUserDataChunk(f *os.File, s *sprite) (userData, error) {
+func readUserDataChunk(f *os.File, s *Sprite) (userData, error) {
 	var err error
 	ud := userData{}
 

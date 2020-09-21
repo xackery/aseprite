@@ -1,4 +1,4 @@
-package main
+package aseprite
 
 import (
 	"encoding/binary"
@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func readColorProfile(f *os.File, s *sprite) error {
+func readColorProfile(f *os.File, s *Sprite) error {
 	var err error
 
 	var profileType int16

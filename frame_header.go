@@ -1,4 +1,4 @@
-package main
+package aseprite
 
 import (
 	"encoding/binary"
@@ -16,7 +16,7 @@ type frameHeader struct {
 	duration   uint16
 }
 
-func readFrameHeader(f *os.File, frameIndex uint16, flags uint32, isIgnoreOldColorChunks bool, s *sprite) error {
+func readFrameHeader(f *os.File, frameIndex uint16, flags uint32, isIgnoreOldColorChunks bool, s *Sprite) error {
 	log := log.New()
 	log.Debug().Msgf("----- frame %d -----", frameIndex)
 	var err error
@@ -172,8 +172,8 @@ func readFrameHeader(f *os.File, frameIndex uint16, flags uint32, isIgnoreOldCol
 			log.Debug().Msgf("ignoring chunk path 0x%x", pos)
 			//ignore
 		case 0x2018: //ASE_FILE_CHUNK_TAGS
-			log.Debug().Msgf("readTagsChunk 0x%x", pos)
-			err = readTagsChunk(f, s)
+			log.Debug().Msgf("readTagChunk 0x%x", pos)
+			err = readTagChunk(f, s)
 			if err != nil {
 				return fmt.Errorf("readTagsChunk %d: %w", chunkIndex, err)
 			}

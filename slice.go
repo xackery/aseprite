@@ -1,4 +1,4 @@
-package main
+package aseprite
 
 import (
 	"encoding/binary"
@@ -19,7 +19,7 @@ type slice struct {
 type sliceKey struct {
 }
 
-func readSlicesChunk(f *os.File, frameIndex uint16, s *sprite) error {
+func readSlicesChunk(f *os.File, frameIndex uint16, s *Sprite) error {
 	var err error
 	var sliceCount int32
 	err = binary.Read(f, binary.LittleEndian, &sliceCount)
@@ -40,7 +40,7 @@ func readSlicesChunk(f *os.File, frameIndex uint16, s *sprite) error {
 	return nil
 }
 
-func readSliceChunk(f *os.File, frameIndex uint16, s *sprite) (*slice, error) {
+func readSliceChunk(f *os.File, frameIndex uint16, s *Sprite) (*slice, error) {
 	var err error
 	sl := new(slice)
 	var keyCount int32
