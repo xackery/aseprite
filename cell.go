@@ -6,6 +6,7 @@ import (
 	"image"
 	"io"
 
+	"github.com/hajimehoshi/ebiten"
 	"github.com/xackery/log"
 )
 
@@ -18,6 +19,7 @@ type Cell struct {
 	frameIndex  uint16
 	boundsFixed image.Rectangle
 	userData    *userData
+	EbitenImage *ebiten.Image
 }
 
 func readCellChunk(f io.ReadSeeker, layers []*Layer, frameIndex uint16, chunkSize uint32, pal *palette) (*Cell, error) {
