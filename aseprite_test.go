@@ -27,7 +27,7 @@ func TestLoad(t *testing.T) {
 			}
 			defer f.Close()
 
-			err = png.Encode(f, convertImage(c.img, s.Width, s.Height, c.positionX, c.positionY))
+			err = png.Encode(f, convertImage(c.Image, s.Width, s.Height, c.PositionX, c.PositionY))
 			if err != nil {
 				t.Fatalf("encode: %v", err)
 			}

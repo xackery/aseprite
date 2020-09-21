@@ -11,10 +11,10 @@ import (
 
 // Cell represents an image
 type Cell struct {
-	positionX   int16
-	positionY   int16
-	opacity     int8
-	img         *image.RGBA
+	PositionX   int16
+	PositionY   int16
+	Opacity     int8
+	Image       *image.RGBA
 	frameIndex  uint16
 	boundsFixed image.Rectangle
 	userData    *userData
@@ -85,11 +85,11 @@ func readCellChunk(f *os.File, layers []*Layer, frameIndex uint16, chunkSize uin
 				return nil, fmt.Errorf("raw_cell readImage: %w", err)
 			}
 		}
-		c.positionX = x
-		c.positionY = y
+		c.PositionX = x
+		c.PositionY = y
 		c.frameIndex = frameIndex
-		c.opacity = opacity
-		c.img = img
+		c.Opacity = opacity
+		c.Image = img
 	case 1: //ASE_FILE_LINK_CEL
 		log.Debug().Msg("link cell")
 		var linkFrame int16
@@ -102,10 +102,10 @@ func readCellChunk(f *os.File, layers []*Layer, frameIndex uint16, chunkSize uin
 		}
 
 		link := layer.Cells[int(linkFrame)]
-		c.positionX = link.positionX
-		c.positionY = link.positionY
-		c.img = link.img
-		c.opacity = link.opacity
+		c.PositionX = link.PositionX
+		c.PositionY = link.PositionY
+		c.Image = link.Image
+		c.Opacity = link.Opacity
 		c.frameIndex = frameIndex
 		fmt.Println("link", c)
 	case 2: //ASE_FILE_COMPRESSED_CEL
@@ -128,11 +128,11 @@ func readCellChunk(f *os.File, layers []*Layer, frameIndex uint16, chunkSize uin
 		if err != nil {
 			return nil, fmt.Errorf("raw_cell readImage: %w", err)
 		}
-		c.positionX = x
-		c.positionY = y
+		c.PositionX = x
+		c.PositionY = y
 		c.frameIndex = frameIndex
-		c.opacity = opacity
-		c.img = img
+		c.Opacity = opacity
+		c.Image = img
 	default:
 		return nil, fmt.Errorf("unknown cellType %d", celType)
 	}
