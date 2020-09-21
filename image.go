@@ -99,7 +99,7 @@ func readCompressedImage(f *os.File, pixelFormat int, width int16, height int16,
 
 	br := bytes.NewReader(data[chunkSize:])
 	//buf = bytes.NewBuffer(data)
-	fmt.Println(fmt.Sprintf("%d %dx%d %x", pixelFormat, width, height, buf))
+	//fmt.Println(fmt.Sprintf("%d %dx%d %x", pixelFormat, width, height, buf))
 
 	var r uint8
 	var g uint8
@@ -125,9 +125,6 @@ func readCompressedImage(f *os.File, pixelFormat int, width int16, height int16,
 				err = binary.Read(br, binary.LittleEndian, &a)
 				if err != nil {
 					return nil, fmt.Errorf("a: %w", err)
-				}
-				if x == 0 && y == 0 {
-					fmt.Println(color.RGBA{R: r, G: g, B: b, A: a})
 				}
 				img.Set(x, y, color.RGBA{R: r, G: g, B: b, A: a})
 			case pixelFormatIMAGEGRAYSCALE:

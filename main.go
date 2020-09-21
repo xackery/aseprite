@@ -16,7 +16,6 @@ func main() {
 	if err != nil {
 		log.Error().Err(err).Msg("failed to run")
 	}
-
 }
 
 func run() error {
@@ -68,11 +67,10 @@ func decode(f *os.File) error {
 		layers:           []*layer{},
 	}
 	for frameIndex := uint16(0); frameIndex < header.frameCount; frameIndex++ {
-		fHeader, err := readFrameHeader(f, frameIndex, header.flags, isIgnoreOldColorChunks, s)
+		err := readFrameHeader(f, frameIndex, header.flags, isIgnoreOldColorChunks, s)
 		if err != nil {
 			return fmt.Errorf("readFrameHeader %d: %w", frameIndex, err)
 		}
-		fmt.Println("fheader", frameIndex, fHeader)
 	}
 	fmt.Println("sprite", s, "layers", s.rootLayer.layers)
 	for lIndex, l := range s.rootLayer.layers {

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"image"
 	"os"
+
+	"github.com/xackery/log"
 )
 
 type cel struct {
@@ -18,6 +20,7 @@ type cel struct {
 }
 
 func readCelChunk(f *os.File, layers []*layer, frameIndex uint16, chunkSize uint32, pal *palette) (*cel, error) {
+	log := log.New()
 	var err error
 	c := new(cel)
 	var layerIndex int16
@@ -87,6 +90,7 @@ func readCelChunk(f *os.File, layers []*layer, frameIndex uint16, chunkSize uint
 		c.opacity = opacity
 		c.img = img
 	case 1: //ASE_FILE_LINK_CEL
+		log.Debug().Msg("link cel")
 		var linkFrame int16
 		err = binary.Read(f, binary.LittleEndian, &linkFrame)
 		if err != nil {
@@ -102,7 +106,9 @@ func readCelChunk(f *os.File, layers []*layer, frameIndex uint16, chunkSize uint
 		c.img = link.img
 		c.opacity = link.opacity
 		c.frameIndex = frameIndex
+		fmt.Println("link", c)
 	case 2: //ASE_FILE_COMPRESSED_CEL
+		log.Debug().Msg("compressed cel")
 		var w int16
 		err = binary.Read(f, binary.LittleEndian, &w)
 		if err != nil {
