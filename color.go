@@ -4,10 +4,10 @@ import (
 	"encoding/binary"
 	"fmt"
 	"image/color"
-	"os"
+	"io"
 )
 
-func readColorChunk(f *os.File) (*palette, error) {
+func readColorChunk(f io.ReadSeeker) (*palette, error) {
 	var err error
 	var packetCount int16
 	err = binary.Read(f, binary.LittleEndian, &packetCount)

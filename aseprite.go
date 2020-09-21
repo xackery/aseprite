@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"image"
+	"io"
 	"os"
 
 	"github.com/xackery/log"
@@ -28,7 +29,7 @@ func Load(path string) (*Sprite, error) {
 }
 
 // Decode will decode provided asperite file
-func Decode(f *os.File) (*Sprite, error) {
+func Decode(f io.ReadSeeker) (*Sprite, error) {
 	log := log.New()
 	isIgnoreOldColorChunks := false
 	header, err := readHeader(f)
@@ -69,7 +70,7 @@ func Decode(f *os.File) (*Sprite, error) {
 	return s, nil
 }
 
-func readString(f *os.File) (string, error) {
+func readString(f io.ReadSeeker) (string, error) {
 	value := ""
 	var length int16
 	err := binary.Read(f, binary.LittleEndian, &length)

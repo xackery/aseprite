@@ -4,10 +4,10 @@ import (
 	"encoding/binary"
 	"fmt"
 	"image"
-	"os"
+	"io"
 )
 
-func readCelExtraChunk(f *os.File, c *Cell) error {
+func readCelExtraChunk(f io.ReadSeeker, c *Cell) error {
 	var err error
 	var flags int32
 	err = binary.Read(f, binary.LittleEndian, &flags)

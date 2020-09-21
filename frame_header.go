@@ -4,7 +4,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
-	"os"
 
 	"github.com/xackery/log"
 )
@@ -16,7 +15,7 @@ type frameHeader struct {
 	duration   uint16
 }
 
-func readFrameHeader(f *os.File, frameIndex uint16, flags uint32, isIgnoreOldColorChunks bool, s *Sprite) error {
+func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreOldColorChunks bool, s *Sprite) error {
 	log := log.New()
 	log.Debug().Msgf("----- frame %d -----", frameIndex)
 	var err error

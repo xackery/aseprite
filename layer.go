@@ -3,7 +3,7 @@ package aseprite
 import (
 	"encoding/binary"
 	"fmt"
-	"os"
+	"io"
 
 	"github.com/xackery/log"
 )
@@ -52,7 +52,7 @@ const (
 	blendModeDivide        int16 = 18
 )
 
-func readLayerChunk(f *os.File, headerFlags uint32, prevLayer *Layer, currentLevel int16) (*Layer, error) {
+func readLayerChunk(f io.ReadSeeker, headerFlags uint32, prevLayer *Layer, currentLevel int16) (*Layer, error) {
 	log := log.New()
 	var err error
 	layer := new(Layer)

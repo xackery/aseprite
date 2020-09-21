@@ -3,7 +3,7 @@ package aseprite
 import (
 	"encoding/binary"
 	"fmt"
-	"os"
+	"io"
 )
 
 type header struct {
@@ -32,7 +32,7 @@ func (h *header) String() string {
 	return fmt.Sprintf("header &{size: %d, frameCount: %d, dimensions: %dx%d, depth: %d, flags: %d, speed: %d, next: %d, frit: %d, transparentIndex: %d, ncolors: %d, pixelDimensions: %dx%d, gridPos: %dx%d, gridDimensions: %dx%d}", h.size, h.frameCount, h.width, h.height, h.depth, h.flags, h.speed, h.next, h.frit, h.transparentIndex, h.ncolors, h.pixelWidth, h.pixelHeight, h.gridX, h.gridY, h.gridWidth, h.gridHeight)
 }
 
-func readHeader(f *os.File) (*header, error) {
+func readHeader(f io.ReadSeeker) (*header, error) {
 	var err error
 	h := &header{}
 	if f == nil {

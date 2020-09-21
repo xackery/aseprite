@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"image/color"
-	"os"
+	"io"
 )
 
 type userData struct {
@@ -23,7 +23,7 @@ func (ud userData) set(val userData) {
 	}
 }
 
-func readUserDataChunk(f *os.File, s *Sprite) (userData, error) {
+func readUserDataChunk(f io.ReadSeeker, s *Sprite) (userData, error) {
 	var err error
 	ud := userData{}
 

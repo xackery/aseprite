@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"image"
-	"os"
+	"io"
 )
 
 type slice struct {
@@ -19,7 +19,7 @@ type slice struct {
 type sliceKey struct {
 }
 
-func readSlicesChunk(f *os.File, frameIndex uint16, s *Sprite) error {
+func readSlicesChunk(f io.ReadSeeker, frameIndex uint16, s *Sprite) error {
 	var err error
 	var sliceCount int32
 	err = binary.Read(f, binary.LittleEndian, &sliceCount)
@@ -40,7 +40,7 @@ func readSlicesChunk(f *os.File, frameIndex uint16, s *Sprite) error {
 	return nil
 }
 
-func readSliceChunk(f *os.File, frameIndex uint16, s *Sprite) (*slice, error) {
+func readSliceChunk(f io.ReadSeeker, frameIndex uint16, s *Sprite) (*slice, error) {
 	var err error
 	sl := new(slice)
 	var keyCount int32

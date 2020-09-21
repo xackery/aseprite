@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"image"
-	"os"
+	"io"
 )
 
 type mask struct {
@@ -13,7 +13,7 @@ type mask struct {
 	img    image.RGBA
 }
 
-func readMaskChunk(f *os.File) (*mask, error) {
+func readMaskChunk(f io.ReadSeeker) (*mask, error) {
 	var err error
 	m := &mask{}
 	var x int16

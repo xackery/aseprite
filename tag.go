@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"image/color"
-	"os"
+	"io"
 )
 
 type tag struct {
@@ -15,7 +15,7 @@ type tag struct {
 	animationDirection int8
 }
 
-func readTagChunk(f *os.File, s *Sprite) error {
+func readTagChunk(f io.ReadSeeker, s *Sprite) error {
 	var err error
 	var tagCount int16
 

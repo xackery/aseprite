@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"image"
-	"os"
+	"io"
 
 	"github.com/xackery/log"
 )
@@ -20,7 +20,7 @@ type Cell struct {
 	userData    *userData
 }
 
-func readCellChunk(f *os.File, layers []*Layer, frameIndex uint16, chunkSize uint32, pal *palette) (*Cell, error) {
+func readCellChunk(f io.ReadSeeker, layers []*Layer, frameIndex uint16, chunkSize uint32, pal *palette) (*Cell, error) {
 	log := log.New()
 	var err error
 	c := new(Cell)

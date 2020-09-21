@@ -4,14 +4,14 @@ import (
 	"encoding/binary"
 	"fmt"
 	"image/color"
-	"os"
+	"io"
 )
 
 type palette struct {
 	colors []color.RGBA
 }
 
-func readPaletteChunk(f *os.File, frameIndex uint16, flags uint32) (*palette, error) {
+func readPaletteChunk(f io.ReadSeeker, frameIndex uint16, flags uint32) (*palette, error) {
 	var err error
 	var newSize int32
 	err = binary.Read(f, binary.LittleEndian, &newSize)

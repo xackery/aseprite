@@ -3,10 +3,10 @@ package aseprite
 import (
 	"encoding/binary"
 	"fmt"
-	"os"
+	"io"
 )
 
-func readColorProfile(f *os.File, s *Sprite) error {
+func readColorProfile(f io.ReadSeeker, s *Sprite) error {
 	var err error
 
 	var profileType int16
