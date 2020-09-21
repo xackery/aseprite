@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func readCelExtraChunk(f *os.File, c *cel) error {
+func readCelExtraChunk(f *os.File, c *Cell) error {
 	var err error
 	var flags int32
 	err = binary.Read(f, binary.LittleEndian, &flags)

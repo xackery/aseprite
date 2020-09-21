@@ -20,7 +20,7 @@ func TestLoad(t *testing.T) {
 		if !l.isImage {
 			continue
 		}
-		for cIndex, c := range l.cels {
+		for cIndex, c := range l.Cells {
 			f, err := os.Create(fmt.Sprintf("tmp/image%d-%d.png", lIndex, cIndex))
 			if err != nil {
 				t.Fatalf("create: %v", err)

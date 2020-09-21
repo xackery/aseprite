@@ -9,7 +9,8 @@ import (
 	"github.com/xackery/log"
 )
 
-type cel struct {
+// Cell represents an image
+type Cell struct {
 	positionX   int16
 	positionY   int16
 	opacity     int8
@@ -19,10 +20,10 @@ type cel struct {
 	userData    *userData
 }
 
-func readCelChunk(f *os.File, layers []*Layer, frameIndex uint16, chunkSize uint32, pal *palette) (*cel, error) {
+func readCellChunk(f *os.File, layers []*Layer, frameIndex uint16, chunkSize uint32, pal *palette) (*Cell, error) {
 	log := log.New()
 	var err error
-	c := new(cel)
+	c := new(Cell)
 	var layerIndex int16
 
 	err = binary.Read(f, binary.LittleEndian, &layerIndex)
@@ -70,18 +71,18 @@ func readCelChunk(f *os.File, layers []*Layer, frameIndex uint16, chunkSize uint
 		var w int16
 		err = binary.Read(f, binary.LittleEndian, &w)
 		if err != nil {
-			return nil, fmt.Errorf("raw_cel w: %w", err)
+			return nil, fmt.Errorf("raw_cell w: %w", err)
 		}
 		var h int16
 		err = binary.Read(f, binary.LittleEndian, &h)
 		if err != nil {
-			return nil, fmt.Errorf("raw_cel h: %w", err)
+			return nil, fmt.Errorf("raw_cell h: %w", err)
 		}
 
 		if w > 0 && h > 0 {
 			img, err = readRawImage(f, pixelFormatIMAGERGB, w, h, pal)
 			if err != nil {
-				return nil, fmt.Errorf("raw_cel readImage: %w", err)
+				return nil, fmt.Errorf("raw_cell readImage: %w", err)
 			}
 		}
 		c.positionX = x
@@ -90,17 +91,17 @@ func readCelChunk(f *os.File, layers []*Layer, frameIndex uint16, chunkSize uint
 		c.opacity = opacity
 		c.img = img
 	case 1: //ASE_FILE_LINK_CEL
-		log.Debug().Msg("link cel")
+		log.Debug().Msg("link cell")
 		var linkFrame int16
 		err = binary.Read(f, binary.LittleEndian, &linkFrame)
 		if err != nil {
-			return nil, fmt.Errorf("link_cel linkFrame: %w", err)
+			return nil, fmt.Errorf("link_cell linkFrame: %w", err)
 		}
-		if len(layer.cels) <= int(linkFrame) {
-			return nil, fmt.Errorf("link_cel linkFrame %d out of bounds (%d)", linkFrame, len(layer.cels))
+		if len(layer.Cells) <= int(linkFrame) {
+			return nil, fmt.Errorf("link_cell linkFrame %d out of bounds (%d)", linkFrame, len(layer.Cells))
 		}
 
-		link := layer.cels[int(linkFrame)]
+		link := layer.Cells[int(linkFrame)]
 		c.positionX = link.positionX
 		c.positionY = link.positionY
 		c.img = link.img
@@ -108,24 +109,24 @@ func readCelChunk(f *os.File, layers []*Layer, frameIndex uint16, chunkSize uint
 		c.frameIndex = frameIndex
 		fmt.Println("link", c)
 	case 2: //ASE_FILE_COMPRESSED_CEL
-		log.Debug().Msg("compressed cel")
+		log.Debug().Msg("compressed cell")
 		var w int16
 		err = binary.Read(f, binary.LittleEndian, &w)
 		if err != nil {
-			return nil, fmt.Errorf("compressed_cel w: %w", err)
+			return nil, fmt.Errorf("compressed_cell w: %w", err)
 		}
 		var h int16
 		err = binary.Read(f, binary.LittleEndian, &h)
 		if err != nil {
-			return nil, fmt.Errorf("compressed_cel h: %w", err)
+			return nil, fmt.Errorf("compressed_cell h: %w", err)
 		}
 		if w <= 0 || h <= 0 {
-			return nil, fmt.Errorf("compressed_cel %dx%d is invalid", w, h)
+			return nil, fmt.Errorf("compressed_cell %dx%d is invalid", w, h)
 		}
 
 		img, err = readCompressedImage(f, pixelFormatIMAGERGB, w, h, chunkSize, pal)
 		if err != nil {
-			return nil, fmt.Errorf("raw_cel readImage: %w", err)
+			return nil, fmt.Errorf("raw_cell readImage: %w", err)
 		}
 		c.positionX = x
 		c.positionY = y
@@ -133,9 +134,9 @@ func readCelChunk(f *os.File, layers []*Layer, frameIndex uint16, chunkSize uint
 		c.opacity = opacity
 		c.img = img
 	default:
-		return nil, fmt.Errorf("unknown celType %d", celType)
+		return nil, fmt.Errorf("unknown cellType %d", celType)
 	}
 
-	layer.cels = append(layer.cels, c)
+	layer.Cells = append(layer.Cells, c)
 	return c, nil
 }

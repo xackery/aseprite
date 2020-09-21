@@ -17,7 +17,7 @@ type Layer struct {
 	flags     int16
 	parents   []*Layer
 	layers    []*Layer
-	cels      []*cel
+	Cells     []*Cell
 	userData  *userData
 }
 
