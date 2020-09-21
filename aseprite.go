@@ -46,8 +46,8 @@ func decode(f *os.File) (*Sprite, error) {
 	}
 
 	s := &Sprite{
-		width:            header.width,
-		height:           header.height,
+		Width:            header.width,
+		Height:           header.height,
 		ncolors:          header.ncolors,
 		depth:            header.depth,
 		frameCount:       header.frameCount,
@@ -55,8 +55,8 @@ func decode(f *os.File) (*Sprite, error) {
 		transparentIndex: header.transparentIndex,
 		pixelRatio:       float32(header.pixelWidth / header.pixelHeight),
 		gridBounds:       image.Rect(int(header.gridX), int(header.gridY), int(header.gridWidth), int(header.gridHeight)),
-		rootLayer:        &layer{},
-		layers:           []*layer{},
+		rootLayer:        &Layer{},
+		Layers:           []*Layer{},
 	}
 	for frameIndex := uint16(0); frameIndex < header.frameCount; frameIndex++ {
 		err := readFrameHeader(f, frameIndex, header.flags, isIgnoreOldColorChunks, s)

@@ -77,7 +77,7 @@ func readTagChunk(f *os.File, s *Sprite) error {
 		if err != nil {
 			return fmt.Errorf("name: %w", err)
 		}
-		s.tags = append(s.tags, t)
+		s.Tags = append(s.Tags, t)
 	}
 	return nil
 }

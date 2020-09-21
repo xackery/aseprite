@@ -27,13 +27,13 @@ func TestLoad(t *testing.T) {
 			}
 			defer f.Close()
 
-			err = png.Encode(f, convertImage(c.img, s.width, s.height, c.positionX, c.positionY))
+			err = png.Encode(f, convertImage(c.img, s.Width, s.Height, c.positionX, c.positionY))
 			if err != nil {
 				t.Fatalf("encode: %v", err)
 			}
 		}
 	}
-	for cTag, t := range s.tags {
+	for cTag, t := range s.Tags {
 		log.Debug().Msgf("tag %d: %v", cTag, t)
 	}
 }

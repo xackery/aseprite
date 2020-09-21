@@ -13,8 +13,8 @@ const (
 // Sprite represents an aseprite sprite file
 type Sprite struct {
 	frameCount       uint16
-	width            uint16
-	height           uint16
+	Width            uint16
+	Height           uint16
 	depth            uint16
 	ncolors          uint16
 	speed            uint16
@@ -22,8 +22,8 @@ type Sprite struct {
 	colorSpace       int
 	pixelRatio       float32
 	gridBounds       image.Rectangle
-	tags             []*tag
+	Tags             []*tag
 	slices           []*slice
-	rootLayer        *layer
-	layers           []*layer
+	rootLayer        *Layer
+	Layers           []*Layer
 }

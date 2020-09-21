@@ -8,14 +8,15 @@ import (
 	"github.com/xackery/log"
 )
 
-type layer struct {
+// Layer represents layers of a sprite
+type Layer struct {
 	isImage   bool
 	blendMode int16
 	name      string
 	opacity   int8
 	flags     int16
-	parents   []*layer
-	layers    []*layer
+	parents   []*Layer
+	layers    []*Layer
 	cels      []*cel
 	userData  *userData
 }
@@ -51,10 +52,10 @@ const (
 	blendModeDivide        int16 = 18
 )
 
-func readLayerChunk(f *os.File, headerFlags uint32, prevLayer *layer, currentLevel int16) (*layer, error) {
+func readLayerChunk(f *os.File, headerFlags uint32, prevLayer *Layer, currentLevel int16) (*Layer, error) {
 	log := log.New()
 	var err error
-	layer := new(layer)
+	layer := new(Layer)
 
 	var flags int16
 	err = binary.Read(f, binary.LittleEndian, &flags)

@@ -64,7 +64,7 @@ func readFrameHeader(f *os.File, frameIndex uint16, flags uint32, isIgnoreOldCol
 		return h, nil
 	}*/
 
-	var prevLayer *layer
+	var prevLayer *Layer
 	var currentLevel int16
 	var lastCel *cel
 	var lastSlice *slice
@@ -125,7 +125,7 @@ func readFrameHeader(f *os.File, frameIndex uint16, flags uint32, isIgnoreOldCol
 			if err != nil {
 				return fmt.Errorf("readLayerChunk %d: %w", chunkIndex, err)
 			}
-			s.layers = append(s.layers, layer)
+			s.Layers = append(s.Layers, layer)
 			if layer != nil {
 				s.rootLayer.layers = append(s.rootLayer.layers, layer)
 				lastLayer = layer
@@ -134,7 +134,7 @@ func readFrameHeader(f *os.File, frameIndex uint16, flags uint32, isIgnoreOldCol
 			}
 		case 0x2005: //ASE_FILE_CHUNK_CEL
 			log.Debug().Msgf("readCelChunk 0x%x", pos)
-			cel, err := readCelChunk(f, s.layers, frameIndex, chunkSize, pal)
+			cel, err := readCelChunk(f, s.Layers, frameIndex, chunkSize, pal)
 			if err != nil {
 				return fmt.Errorf("readCelChunk %d: %w", chunkIndex, err)
 			}

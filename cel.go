@@ -19,7 +19,7 @@ type cel struct {
 	userData    *userData
 }
 
-func readCelChunk(f *os.File, layers []*layer, frameIndex uint16, chunkSize uint32, pal *palette) (*cel, error) {
+func readCelChunk(f *os.File, layers []*Layer, frameIndex uint16, chunkSize uint32, pal *palette) (*cel, error) {
 	log := log.New()
 	var err error
 	c := new(cel)
