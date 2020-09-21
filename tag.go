@@ -7,7 +7,8 @@ import (
 	"io"
 )
 
-type tag struct {
+// Tag represents animation groupings
+type Tag struct {
 	from               int16
 	to                 int16
 	name               string
@@ -29,7 +30,7 @@ func readTagChunk(f io.ReadSeeker, s *Sprite) error {
 		return fmt.Errorf("seek tags: %w", err)
 	}
 	for c := int16(0); c < tagCount; c++ {
-		t := new(tag)
+		t := new(Tag)
 		err = binary.Read(f, binary.LittleEndian, &t.from)
 		if err != nil {
 			return fmt.Errorf("from: %w", err)

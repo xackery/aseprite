@@ -22,7 +22,7 @@ type Sprite struct {
 	colorSpace       int
 	pixelRatio       float32
 	gridBounds       image.Rectangle
-	Tags             []*tag
+	Tags             []*Tag
 	slices           []*slice
 	rootLayer        *Layer
 	Layers           []*Layer
