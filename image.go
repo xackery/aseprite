@@ -79,7 +79,7 @@ func readCompressedImage(f *os.File, pixelFormat int, width int16, height int16,
 		return nil, fmt.Errorf("zlib: %w", err)
 	}
 	defer zr.Close()
-	fmt.Println("chunkSize", chunkSize)
+
 	data := make([]byte, chunkSize)
 
 	buf := bytes.NewBuffer(data)

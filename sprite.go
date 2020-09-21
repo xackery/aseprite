@@ -24,6 +24,7 @@ type sprite struct {
 	tags             []*tag
 	slices           []*slice
 	rootLayer        *layer
+	layers           []*layer
 }
 
 func (s *sprite) pixelFormat() {

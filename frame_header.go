@@ -19,6 +19,7 @@ type frameHeader struct {
 func readFrameHeader(f *os.File, frameIndex uint16, flags uint32, isIgnoreOldColorChunks bool, s *sprite) (*frameHeader, error) {
 
 	log := log.New()
+	log.Debug().Msgf("----- frame %d -----", frameIndex)
 	var err error
 	h := &frameHeader{}
 	if f == nil {
@@ -69,11 +70,23 @@ func readFrameHeader(f *os.File, frameIndex uint16, flags uint32, isIgnoreOldCol
 	var lastCel *cel
 	var lastSlice *slice
 	var pal *palette
-	layers := []*layer{}
-
+	var chunkSize uint32
+	var chunkStart int64
 	log.Debug().Msgf("processing %d chunks for frame %d", h.chunkCount, frameIndex)
 	for chunkIndex := uint16(0); chunkIndex < h.chunkCount; chunkIndex++ {
-		var chunkSize uint32
+
+		if chunkSize > 0 {
+			_, err = f.Seek(chunkStart+int64(chunkSize), io.SeekStart)
+			if err != nil {
+				return nil, fmt.Errorf("reposition")
+			}
+		}
+
+		chunkStart, err = f.Seek(0, io.SeekCurrent)
+		if err != nil {
+			return nil, fmt.Errorf("chunkStart: %w", err)
+		}
+
 		err = binary.Read(f, binary.LittleEndian, &chunkSize)
 		if err != nil {
 			return nil, fmt.Errorf("chunkSize %d: %w", chunkIndex, err)
@@ -99,21 +112,21 @@ func readFrameHeader(f *os.File, frameIndex uint16, flags uint32, isIgnoreOldCol
 			if err != nil {
 				return nil, fmt.Errorf("readColorChunk %d: %w", chunkIndex, err)
 			}
-			fmt.Println("colorChunk palette", pal)
+			log.Debug().Msgf("colorChunk palette %v", pal)
 		case 0x2019: //ASE_FILE_CHUNK_PALETTE
 			log.Debug().Msgf("readPaletteChunk 0x%x", pos)
 			pal, err := readPaletteChunk(f, frameIndex, flags)
 			if err != nil {
 				return nil, fmt.Errorf("readPalleteChunk %d: %w", chunkIndex, err)
 			}
-			fmt.Println("palette", pal)
+			log.Debug().Msgf("palette %v", pal)
 		case 0x2004: //ASE_FILE_CHUNK_LAYER
 			log.Debug().Msgf("readLayerChunk 0x%x", pos)
 			layer, err := readLayerChunk(f, flags, prevLayer, currentLevel)
 			if err != nil {
 				return nil, fmt.Errorf("readLayerChunk %d: %w", chunkIndex, err)
 			}
-			layers = append(layers, layer)
+			s.layers = append(s.layers, layer)
 			if layer != nil {
 				s.rootLayer.layers = append(s.rootLayer.layers, layer)
 				lastLayer = layer
@@ -122,7 +135,7 @@ func readFrameHeader(f *os.File, frameIndex uint16, flags uint32, isIgnoreOldCol
 			}
 		case 0x2005: //ASE_FILE_CHUNK_CEL
 			log.Debug().Msgf("readCelChunk 0x%x", pos)
-			cel, err := readCelChunk(f, layers, frameIndex, chunkSize, pal)
+			cel, err := readCelChunk(f, s.layers, frameIndex, chunkSize, pal)
 			if err != nil {
 				return nil, fmt.Errorf("readCelChunk %d: %w", chunkIndex, err)
 			}
@@ -202,6 +215,12 @@ func readFrameHeader(f *os.File, frameIndex uint16, flags uint32, isIgnoreOldCol
 			//ignore
 		default:
 			log.Warn().Uint32("chunkSize", chunkSize).Msgf("readFrameHeader: unhandled chunk type %d at index %d 0x%x", chunkType, chunkIndex, pos)
+		}
+	}
+	if chunkSize > 0 {
+		_, err = f.Seek(chunkStart+int64(chunkSize), io.SeekStart)
+		if err != nil {
+			return nil, fmt.Errorf("reposition")
 		}
 	}
 

@@ -21,7 +21,7 @@ func main() {
 
 func run() error {
 	log := log.New()
-	path := "examples/basic.aseprite"
+	path := "examples/_default.aseprite"
 	log.Debug().Msgf("parsing %s", path)
 	f, err := os.Open(path)
 	if err != nil {
@@ -65,8 +65,8 @@ func decode(f *os.File) error {
 		pixelRatio:       float32(header.pixelWidth / header.pixelHeight),
 		gridBounds:       image.Rect(int(header.gridX), int(header.gridY), int(header.gridWidth), int(header.gridHeight)),
 		rootLayer:        &layer{},
+		layers:           []*layer{},
 	}
-
 	for frameIndex := uint16(0); frameIndex < header.frameCount; frameIndex++ {
 		fHeader, err := readFrameHeader(f, frameIndex, header.flags, isIgnoreOldColorChunks, s)
 		if err != nil {
@@ -75,11 +75,11 @@ func decode(f *os.File) error {
 		fmt.Println("fheader", frameIndex, fHeader)
 	}
 	fmt.Println("sprite", s, "layers", s.rootLayer.layers)
-	for _, l := range s.rootLayer.layers {
-		fmt.Println("layer", l)
+	for lIndex, l := range s.rootLayer.layers {
+		fmt.Println("layer index", lIndex, l)
 		if l.isImage {
-			for _, c := range l.cels {
-				f, err := os.Create("image.png")
+			for cIndex, c := range l.cels {
+				f, err := os.Create(fmt.Sprintf("image%d-%d.png", lIndex, cIndex))
 				if err != nil {
 					return fmt.Errorf("create: %w", err)
 				}

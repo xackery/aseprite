@@ -21,6 +21,7 @@ func readCelChunk(f *os.File, layers []*layer, frameIndex uint16, chunkSize uint
 	var err error
 	c := new(cel)
 	var layerIndex int16
+
 	err = binary.Read(f, binary.LittleEndian, &layerIndex)
 	if err != nil {
 		return nil, fmt.Errorf("layerIndex: %w", err)
@@ -128,6 +129,7 @@ func readCelChunk(f *os.File, layers []*layer, frameIndex uint16, chunkSize uint
 	default:
 		return nil, fmt.Errorf("unknown celType %d", celType)
 	}
+
 	layer.cels = append(layer.cels, c)
 	return c, nil
 }
