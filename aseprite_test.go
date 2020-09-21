@@ -15,8 +15,8 @@ func TestLoad(t *testing.T) {
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
-	log.Debug().Msgf("sprite: %v, layers: %v", s, s.rootLayer.layers)
-	for lIndex, l := range s.rootLayer.layers {
+	log.Debug().Msgf("sprite: %v, layers: %v", s, s.coreLayers)
+	for lIndex, l := range s.coreLayers {
 		if !l.isImage {
 			continue
 		}

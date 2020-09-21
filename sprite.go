@@ -24,6 +24,6 @@ type Sprite struct {
 	gridBounds       image.Rectangle
 	Tags             []*Tag
 	slices           []*slice
-	rootLayer        *Layer
-	Layers           []*Layer
+	coreLayers       []*Layer
+	Layers           map[string]*Layer
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/xackery/log"
 )
@@ -24,7 +25,7 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 		return fmt.Errorf("file must not be nil")
 	}
 
-	lastLayer := s.rootLayer
+	lastLayer := &Layer{}
 	err = binary.Read(f, binary.LittleEndian, &h.size)
 	if err != nil {
 		return fmt.Errorf("size: %w", err)
@@ -124,16 +125,17 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 			if err != nil {
 				return fmt.Errorf("readLayerChunk %d: %w", chunkIndex, err)
 			}
-			s.Layers = append(s.Layers, layer)
+
 			if layer != nil {
-				s.rootLayer.layers = append(s.rootLayer.layers, layer)
+				s.coreLayers = append(s.coreLayers, layer)
+				s.Layers[strings.ToLower(layer.Name)] = layer
 				lastLayer = layer
 				lastSlice = nil
 				lastCel = nil
 			}
 		case 0x2005: //ASE_FILE_CHUNK_CEL
 			log.Debug().Msgf("readCelChunk 0x%x", pos)
-			cel, err := readCellChunk(f, s.Layers, frameIndex, chunkSize, pal, h.duration)
+			cel, err := readCellChunk(f, s.coreLayers, frameIndex, chunkSize, pal, h.duration)
 			if err != nil {
 				return fmt.Errorf("readCelChunk %d: %w", chunkIndex, err)
 			}

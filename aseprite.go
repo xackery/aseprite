@@ -57,8 +57,8 @@ func Decode(f io.ReadSeeker) (*Sprite, error) {
 		transparentIndex: header.transparentIndex,
 		pixelRatio:       float32(header.pixelWidth / header.pixelHeight),
 		gridBounds:       image.Rect(int(header.gridX), int(header.gridY), int(header.gridWidth), int(header.gridHeight)),
-		rootLayer:        &Layer{},
-		Layers:           []*Layer{},
+		coreLayers:       []*Layer{},
+		Layers:           make(map[string]*Layer),
 	}
 	for frameIndex := uint16(0); frameIndex < header.frameCount; frameIndex++ {
 		err := readFrameHeader(f, frameIndex, header.flags, isIgnoreOldColorChunks, s)
