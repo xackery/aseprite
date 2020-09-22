@@ -7,7 +7,6 @@ import (
 	"io"
 
 	"github.com/hajimehoshi/ebiten"
-	"github.com/xackery/log"
 )
 
 // Cell represents an image
@@ -24,7 +23,7 @@ type Cell struct {
 }
 
 func readCellChunk(f io.ReadSeeker, layers []*Layer, frameIndex uint16, chunkSize uint32, pal *palette, duration uint16) (*Cell, error) {
-	log := log.New()
+	// log := log.New()
 	var err error
 	c := new(Cell)
 	c.Duration = duration

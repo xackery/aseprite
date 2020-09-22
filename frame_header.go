@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"io"
 	"strings"
-
-	"github.com/xackery/log"
 )
 
 type frameHeader struct {
@@ -17,7 +15,7 @@ type frameHeader struct {
 }
 
 func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreOldColorChunks bool, s *Sprite) error {
-	log := log.New()
+	// log := log.New()
 	// log.Debug().Msgf("----- frame %d -----", frameIndex)
 	var err error
 	h := &frameHeader{}
@@ -95,10 +93,6 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 		if err != nil {
 			return fmt.Errorf("chunkType %d: %w", chunkIndex, err)
 		}
-		pos, err := f.Seek(0, io.SeekCurrent)
-		if err != nil {
-			return fmt.Errorf("seek default: %w", err)
-		}
 		switch chunkType {
 		case 11, 4: //ASE_FILE_CHUNK_FLI_COLOR, ASE_FILE_CHUNK_FLI_COLOR2 legacy
 
@@ -114,7 +108,7 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 			// log.Debug().Msgf("colorChunk palette %v", pal)
 		case 0x2019: //ASE_FILE_CHUNK_PALETTE
 			// log.Debug().Msgf("readPaletteChunk 0x%x", pos)
-			pal, err := readPaletteChunk(f, frameIndex, flags)
+			_, err = readPaletteChunk(f, frameIndex, flags)
 			if err != nil {
 				return fmt.Errorf("readPalleteChunk %d: %w", chunkIndex, err)
 			}
@@ -214,7 +208,7 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 			// log.Debug().Msgf("readFrameHeader: ignoring chunk tileset 0x%x", pos)
 			//ignore
 		default:
-			log.Warn().Uint32("chunkSize", chunkSize).Msgf("readFrameHeader: unhandled chunk type %d at index %d 0x%x", chunkType, chunkIndex, pos)
+			//	log.Warn().Uint32("chunkSize", chunkSize).Msgf("readFrameHeader: unhandled chunk type %d at index %d 0x%x", chunkType, chunkIndex, pos)
 		}
 	}
 	if chunkSize > 0 {

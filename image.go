@@ -8,8 +8,6 @@ import (
 	"image"
 	"image/color"
 	"io"
-
-	"github.com/xackery/log"
 )
 
 func readRawImage(f io.ReadSeeker, pixelFormat int, width int16, height int16, pal *palette) (*image.RGBA, error) {
@@ -69,7 +67,7 @@ func readRawImage(f io.ReadSeeker, pixelFormat int, width int16, height int16, p
 }
 
 func readCompressedImage(f io.ReadSeeker, pixelFormat int, width int16, height int16, chunkSize uint32, pal *palette) (*image.RGBA, error) {
-	log := log.New().With().Int16("width", width).Int16("height", height).Logger()
+	// log := log.New().With().Int16("width", width).Int16("height", height).Logger()
 	var err error
 	img := image.NewRGBA(image.Rect(0, 0, int(width), int(height)))
 

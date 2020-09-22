@@ -4,8 +4,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
-
-	"github.com/xackery/log"
 )
 
 // Layer represents layers of a sprite
@@ -53,7 +51,7 @@ const (
 )
 
 func readLayerChunk(f io.ReadSeeker, headerFlags uint32, prevLayer *Layer, currentLevel int16) (*Layer, error) {
-	log := log.New()
+	// log := log.New()
 	var err error
 	layer := new(Layer)
 

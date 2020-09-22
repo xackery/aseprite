@@ -5,12 +5,10 @@ import (
 	"image/png"
 	"os"
 	"testing"
-
-	"github.com/xackery/log"
 )
 
 func TestLoad(t *testing.T) {
-	log := log.New()
+	// log := log.New()
 	s, err := Load("examples/_default.aseprite")
 	if err != nil {
 		t.Fatalf("%v", err)
@@ -32,8 +30,5 @@ func TestLoad(t *testing.T) {
 				t.Fatalf("encode: %v", err)
 			}
 		}
-	}
-	for cTag, t := range s.Tags {
-		// log.Debug().Msgf("tag %d: %v", cTag, t)
 	}
 }

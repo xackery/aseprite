@@ -6,13 +6,11 @@ import (
 	"image"
 	"io"
 	"os"
-
-	"github.com/xackery/log"
 )
 
 // Load loads a sprite
 func Load(path string) (*Sprite, error) {
-	log := log.New()
+	// log := log.New()
 	//path := "examples/_default.aseprite"
 	// log.Debug().Msgf("parsing %s", path)
 	f, err := os.Open(path)
@@ -30,7 +28,7 @@ func Load(path string) (*Sprite, error) {
 
 // Decode will decode provided asperite file
 func Decode(f io.ReadSeeker) (*Sprite, error) {
-	log := log.New()
+	// log := log.New()
 	isIgnoreOldColorChunks := false
 	header, err := readHeader(f)
 	if err != nil {
