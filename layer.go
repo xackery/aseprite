@@ -122,6 +122,6 @@ func readLayerChunk(f io.ReadSeeker, headerFlags uint32, prevLayer *Layer, curre
 		}
 	}
 	currentLevel = childLevel
-	log.Debug().Msgf("layer: %v", layer)
+	// log.Debug().Msgf("layer: %v", layer)
 	return layer, nil
 }

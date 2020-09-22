@@ -83,7 +83,7 @@ func readCompressedImage(f io.ReadSeeker, pixelFormat int, width int16, height i
 
 	buf := bytes.NewBuffer(data)
 
-	log.Debug().Msg("parsing")
+	// log.Debug().Msg("parsing")
 	_, err = io.Copy(buf, zr)
 	if err != nil {
 		return nil, fmt.Errorf("copy: %w", err)

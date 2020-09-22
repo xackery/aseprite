@@ -95,7 +95,7 @@ func readCellChunk(f io.ReadSeeker, layers []*Layer, frameIndex uint16, chunkSiz
 		c.Opacity = opacity
 		c.Image = img
 	case 1: //ASE_FILE_LINK_CEL
-		log.Debug().Msg("link cell")
+		// log.Debug().Msg("link cell")
 		var linkFrame int16
 		err = binary.Read(f, binary.LittleEndian, &linkFrame)
 		if err != nil {
@@ -113,7 +113,7 @@ func readCellChunk(f io.ReadSeeker, layers []*Layer, frameIndex uint16, chunkSiz
 		c.frameIndex = frameIndex
 		fmt.Println("link", c)
 	case 2: //ASE_FILE_COMPRESSED_CEL
-		log.Debug().Msg("compressed cell")
+		// log.Debug().Msg("compressed cell")
 		var w int16
 		err = binary.Read(f, binary.LittleEndian, &w)
 		if err != nil {

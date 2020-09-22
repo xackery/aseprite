@@ -14,7 +14,7 @@ import (
 func Load(path string) (*Sprite, error) {
 	log := log.New()
 	//path := "examples/_default.aseprite"
-	log.Debug().Msgf("parsing %s", path)
+	// log.Debug().Msgf("parsing %s", path)
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func Decode(f io.ReadSeeker) (*Sprite, error) {
 	if err != nil {
 		return nil, fmt.Errorf("readHeader: %w", err)
 	}
-	log.Debug().Msgf("%s", header)
+	// log.Debug().Msgf("%s", header)
 	if header.depth != 32 &&
 		header.depth != 16 &&
 		header.depth != 8 {
