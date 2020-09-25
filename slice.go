@@ -7,13 +7,14 @@ import (
 	"io"
 )
 
-type slice struct {
+// Slice represents a slice
+type Slice struct {
 	name       string
 	bounds     image.Rectangle
 	center     image.Rectangle
 	pivot      image.Point
 	frameIndex uint16
-	userData   UserData
+	UserData   *UserData
 }
 
 type sliceKey struct {
@@ -40,9 +41,9 @@ func readSlicesChunk(f io.ReadSeeker, frameIndex uint16, s *Sprite) error {
 	return nil
 }
 
-func readSliceChunk(f io.ReadSeeker, frameIndex uint16, s *Sprite) (*slice, error) {
+func readSliceChunk(f io.ReadSeeker, frameIndex uint16, s *Sprite) (*Slice, error) {
 	var err error
-	sl := new(slice)
+	sl := new(Slice)
 	var keyCount int32
 	err = binary.Read(f, binary.LittleEndian, &keyCount)
 	if err != nil {

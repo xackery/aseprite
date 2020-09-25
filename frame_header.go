@@ -67,7 +67,7 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 	var prevLayer *Layer
 	var currentLevel int16
 	var lastCel *Cell
-	var lastSlice *slice
+	var lastSlice *Slice
 	var pal *palette
 	var chunkSize uint32
 	var chunkStart int64
@@ -198,13 +198,13 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 				return fmt.Errorf("readUserDataChunk %d: %w", chunkIndex, err)
 			}
 			if lastCel != nil {
-				lastCel.UserData.set(ud)
+				lastCel.UserData = &ud
 			}
 			if lastLayer != nil {
-				lastLayer.UserData.set(ud)
+				lastLayer.UserData = &ud
 			}
 			if lastSlice != nil {
-				lastSlice.userData.set(ud)
+				lastSlice.UserData = &ud
 			}
 		case 0x2023: //ASE_FILE_CHUNK_TILESET
 			// log.Debug().Msgf("readFrameHeader: ignoring chunk tileset 0x%x", pos)
