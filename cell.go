@@ -18,7 +18,7 @@ type Cell struct {
 	frameIndex  uint16
 	boundsFixed image.Rectangle
 	Duration    uint16
-	userData    *UserData
+	UserData    *UserData
 	EbitenImage *ebiten.Image
 }
 
@@ -26,6 +26,7 @@ func readCellChunk(f io.ReadSeeker, layers []*Layer, frameIndex uint16, chunkSiz
 	// log := log.New()
 	var err error
 	c := new(Cell)
+	c.UserData = &UserData{}
 	c.Duration = duration
 	var layerIndex int16
 

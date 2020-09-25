@@ -24,7 +24,7 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 	}
 
 	lastLayer := &Layer{
-		userData: &UserData{},
+		UserData: &UserData{},
 	}
 	err = binary.Read(f, binary.LittleEndian, &h.size)
 	if err != nil {
@@ -198,10 +198,10 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 				return fmt.Errorf("readUserDataChunk %d: %w", chunkIndex, err)
 			}
 			if lastCel != nil {
-				lastCel.userData.set(ud)
+				lastCel.UserData.set(ud)
 			}
 			if lastLayer != nil {
-				lastLayer.userData.set(ud)
+				lastLayer.UserData.set(ud)
 			}
 			if lastSlice != nil {
 				lastSlice.userData.set(ud)

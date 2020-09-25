@@ -16,7 +16,7 @@ type Layer struct {
 	parents   []*Layer
 	layers    []*Layer
 	Cells     []*Cell
-	userData  *UserData
+	UserData  *UserData
 }
 
 const (
@@ -54,7 +54,7 @@ func readLayerChunk(f io.ReadSeeker, headerFlags uint32, prevLayer *Layer, curre
 	// log := log.New()
 	var err error
 	layer := &Layer{
-		userData: &UserData{},
+		UserData: &UserData{},
 	}
 
 	var flags int16
