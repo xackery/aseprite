@@ -13,7 +13,7 @@ type slice struct {
 	center     image.Rectangle
 	pivot      image.Point
 	frameIndex uint16
-	userData   userData
+	userData   UserData
 }
 
 type sliceKey struct {

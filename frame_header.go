@@ -23,7 +23,9 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 		return fmt.Errorf("file must not be nil")
 	}
 
-	lastLayer := &Layer{}
+	lastLayer := &Layer{
+		userData: &UserData{},
+	}
 	err = binary.Read(f, binary.LittleEndian, &h.size)
 	if err != nil {
 		return fmt.Errorf("size: %w", err)

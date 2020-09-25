@@ -16,7 +16,7 @@ type Layer struct {
 	parents   []*Layer
 	layers    []*Layer
 	Cells     []*Cell
-	userData  *userData
+	userData  *UserData
 }
 
 const (
@@ -53,7 +53,9 @@ const (
 func readLayerChunk(f io.ReadSeeker, headerFlags uint32, prevLayer *Layer, currentLevel int16) (*Layer, error) {
 	// log := log.New()
 	var err error
-	layer := new(Layer)
+	layer := &Layer{
+		userData: &UserData{},
+	}
 
 	var flags int16
 	err = binary.Read(f, binary.LittleEndian, &flags)

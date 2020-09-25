@@ -7,25 +7,26 @@ import (
 	"io"
 )
 
-type userData struct {
-	text  string
-	color color.RGBA
+// UserData represents user defined data
+type UserData struct {
+	Text  string
+	Color color.RGBA
 }
 
-func (ud userData) set(val userData) {
-	if len(val.text) > 0 {
-		ud.text = val.text
+func (ud UserData) set(val UserData) {
+	if len(val.Text) > 0 {
+		ud.Text = val.Text
 	}
-	if val.color.R != 0 &&
-		val.color.G != 0 &&
-		val.color.B != 0 {
-		ud.color = val.color
+	if val.Color.R != 0 &&
+		val.Color.G != 0 &&
+		val.Color.B != 0 {
+		ud.Color = val.Color
 	}
 }
 
-func readUserDataChunk(f io.ReadSeeker, s *Sprite) (userData, error) {
+func readUserDataChunk(f io.ReadSeeker, s *Sprite) (UserData, error) {
 	var err error
-	ud := userData{}
+	ud := UserData{}
 
 	var flags int32
 	err = binary.Read(f, binary.LittleEndian, &flags)
@@ -33,7 +34,7 @@ func readUserDataChunk(f io.ReadSeeker, s *Sprite) (userData, error) {
 		return ud, fmt.Errorf("flags: %w", err)
 	}
 	if flags&1 == 1 { //ASE_USER_DATA_FLAG_HAS_TEXT
-		ud.text, err = readString(f)
+		ud.Text, err = readString(f)
 		if err != nil {
 			return ud, fmt.Errorf("text: %w", err)
 		}
@@ -59,7 +60,7 @@ func readUserDataChunk(f io.ReadSeeker, s *Sprite) (userData, error) {
 		if err != nil {
 			return ud, fmt.Errorf("a: %w", err)
 		}
-		ud.color = color.RGBA{R: r, G: g, B: b, A: a}
+		ud.Color = color.RGBA{R: r, G: g, B: b, A: a}
 	}
 	return ud, nil
 }

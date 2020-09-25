@@ -18,7 +18,7 @@ type Cell struct {
 	frameIndex  uint16
 	boundsFixed image.Rectangle
 	Duration    uint16
-	userData    *userData
+	userData    *UserData
 	EbitenImage *ebiten.Image
 }
 
