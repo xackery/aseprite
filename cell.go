@@ -7,7 +7,6 @@ import (
 	"io"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/rs/zerolog/log"
 )
 
 // Cell represents an image
@@ -185,7 +184,7 @@ func readCellChunk(f io.ReadSeeker, layers []*Layer, frameIndex uint16, chunkSiz
 		if err != nil {
 			return nil, fmt.Errorf("seek 10: %w", err)
 		}
-		log.Debug().Msgf("tile %dx%d bitsPerTile: %d", w, h, bitsPerTile)
+		//log.Debug().Msgf("tile %dx%d bitsPerTile: %d", w, h, bitsPerTile)
 		return nil, fmt.Errorf("wut")
 		img, err = readCompressedImage(f, pixelFormatIMAGERGB, w, h, chunkSize, pal)
 		if err != nil {
