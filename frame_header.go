@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"strings"
+
+	"github.com/rs/zerolog/log"
 )
 
 type frameHeader struct {
@@ -117,7 +119,7 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 			// log.Debug().Msgf("palette %v", pal)
 		case 0x2004: //ASE_FILE_CHUNK_LAYER
 			// log.Debug().Msgf("readLayerChunk 0x%x", pos)
-			layer, err := readLayerChunk(f, flags, prevLayer, currentLevel)
+			layer, err := readLayerChunk(f, s, flags, prevLayer, currentLevel)
 			if err != nil {
 				return fmt.Errorf("readLayerChunk %d: %w", chunkIndex, err)
 			}
@@ -130,7 +132,7 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 				lastCel = nil
 			}
 		case 0x2005: //ASE_FILE_CHUNK_CEL
-			// log.Debug().Msgf("readCelChunk 0x%x", pos)
+			//log.Debug().Msgf("readCelChunk 0x%x", pos)
 			cel, err := readCellChunk(f, s.coreLayers, frameIndex, chunkSize, pal, h.duration)
 			if err != nil {
 				return fmt.Errorf("readCelChunk %d: %w", chunkIndex, err)
@@ -207,10 +209,23 @@ func readFrameHeader(f io.ReadSeeker, frameIndex uint16, flags uint32, isIgnoreO
 				lastSlice.UserData = &ud
 			}
 		case 0x2023: //ASE_FILE_CHUNK_TILESET
-			// log.Debug().Msgf("readFrameHeader: ignoring chunk tileset 0x%x", pos)
+			//log.Debug().Msgf("readFrameHeader: ignoring chunk tileset %d 0x%x", chunkType, chunkIndex)
+			layer, err := readLayerChunk(f, s, flags, prevLayer, currentLevel)
+			if err != nil {
+				return fmt.Errorf("readLayerChunk Tileset %d: %w", chunkIndex, err)
+			}
+
+			if layer != nil {
+				s.coreLayers = append(s.coreLayers, layer)
+				s.Layers[strings.ToLower(layer.Name)] = layer
+				lastLayer = layer
+				lastSlice = nil
+				lastCel = nil
+			}
 			//ignore
 		default:
-			//	log.Warn().Uint32("chunkSize", chunkSize).Msgf("readFrameHeader: unhandled chunk type %d at index %d 0x%x", chunkType, chunkIndex, pos)
+			log.Warn().Msgf("unknown chunk type %d at index %d", chunkType, chunkIndex)
+			//log.Warn().Uint32("chunkSize", chunkSize).Msgf("readFrameHeader: unhandled chunk type %d at index %d 0x%x", chunkType, chunkIndex, pos)
 		}
 	}
 	if chunkSize > 0 {

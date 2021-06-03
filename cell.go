@@ -7,6 +7,7 @@ import (
 	"io"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/rs/zerolog/log"
 )
 
 // Cell represents an image
@@ -128,6 +129,64 @@ func readCellChunk(f io.ReadSeeker, layers []*Layer, frameIndex uint16, chunkSiz
 			return nil, fmt.Errorf("compressed_cell %dx%d is invalid", w, h)
 		}
 
+		img, err = readCompressedImage(f, pixelFormatIMAGERGB, w, h, chunkSize, pal)
+		if err != nil {
+			return nil, fmt.Errorf("raw_cell readImage: %w", err)
+		}
+		c.PositionX = x
+		c.PositionY = y
+		c.frameIndex = frameIndex
+		c.Opacity = opacity
+		c.Image = img
+	case 3: //ASE_FILE_COMPRESSED_TILEMAP
+		var w int16
+		err = binary.Read(f, binary.LittleEndian, &w)
+		if err != nil {
+			return nil, fmt.Errorf("compressed_cell w: %w", err)
+		}
+		var h int16
+		err = binary.Read(f, binary.LittleEndian, &h)
+		if err != nil {
+			return nil, fmt.Errorf("compressed_cell h: %w", err)
+		}
+		if w <= 0 || h <= 0 {
+			return nil, fmt.Errorf("compressed_cell %dx%d is invalid", w, h)
+		}
+		var bitsPerTile int16 //at the moment it's always 32-bit per tile
+		err = binary.Read(f, binary.LittleEndian, &bitsPerTile)
+		if err != nil {
+			return nil, fmt.Errorf("bitsPerTile: %w", err)
+		}
+		if bitsPerTile != 32 {
+			return nil, fmt.Errorf("bitsPerTile expected 32, got %d", bitsPerTile)
+		}
+		var bitMaskTileID int32 //(e.g. 0x1fffffff for 32-bit tiles)
+		err = binary.Read(f, binary.LittleEndian, &bitMaskTileID)
+		if err != nil {
+			return nil, fmt.Errorf("bitMaskTileID: %w", err)
+		}
+		var bitMaskXFlip int32
+		err = binary.Read(f, binary.LittleEndian, &bitMaskXFlip)
+		if err != nil {
+			return nil, fmt.Errorf("bitMaskXFlip: %w", err)
+		}
+		var bitMaskYFlip int32
+		err = binary.Read(f, binary.LittleEndian, &bitMaskYFlip)
+		if err != nil {
+			return nil, fmt.Errorf("bitMaskYFlip: %w", err)
+		}
+		var bitMask90CWRot int32
+		err = binary.Read(f, binary.LittleEndian, &bitMask90CWRot)
+		if err != nil {
+			return nil, fmt.Errorf("bitMask90CWRot: %w", err)
+		}
+		//10 bytes reserved
+		_, err = f.Seek(10, io.SeekCurrent)
+		if err != nil {
+			return nil, fmt.Errorf("seek 10: %w", err)
+		}
+		log.Debug().Msgf("tile %dx%d bitsPerTile: %d", w, h, bitsPerTile)
+		return nil, fmt.Errorf("wut")
 		img, err = readCompressedImage(f, pixelFormatIMAGERGB, w, h, chunkSize, pal)
 		if err != nil {
 			return nil, fmt.Errorf("raw_cell readImage: %w", err)

@@ -8,15 +8,18 @@ import (
 
 // Layer represents layers of a sprite
 type Layer struct {
-	isImage   bool
-	BlendMode int16
-	Name      string
-	Opacity   int8
-	Flags     int16
-	parents   []*Layer
-	layers    []*Layer
-	Cells     []*Cell
-	UserData  *UserData
+	isImage      bool
+	isTileset    bool
+	SpriteWidth  uint16
+	SpriteHeight uint16
+	BlendMode    int16
+	Name         string
+	Opacity      int8
+	Flags        int16
+	parents      []*Layer
+	layers       []*Layer
+	Cells        []*Cell
+	UserData     *UserData
 }
 
 const (
@@ -50,11 +53,13 @@ const (
 	blendModeDivide        int16 = 18
 )
 
-func readLayerChunk(f io.ReadSeeker, headerFlags uint32, prevLayer *Layer, currentLevel int16) (*Layer, error) {
+func readLayerChunk(f io.ReadSeeker, s *Sprite, headerFlags uint32, prevLayer *Layer, currentLevel int16) (*Layer, error) {
 	// log := log.New()
 	var err error
 	layer := &Layer{
-		UserData: &UserData{},
+		UserData:     &UserData{},
+		SpriteWidth:  s.Width,
+		SpriteHeight: s.Height,
 	}
 
 	var flags int16
@@ -106,6 +111,9 @@ func readLayerChunk(f io.ReadSeeker, headerFlags uint32, prevLayer *Layer, curre
 			}
 		}
 	case 1: //ASE_FILE_LAYER_GROUP
+	case 2: //ASE_FILE_LAYER_TILESET
+		layer.isTileset = true
+		//layer.TileSetIndex =
 	default:
 		return nil, nil
 	}
@@ -121,7 +129,6 @@ func readLayerChunk(f io.ReadSeeker, headerFlags uint32, prevLayer *Layer, curre
 			layer.parents = append(layer.parents, prevLayer)
 		}
 	}
-	currentLevel = childLevel
 	// log.Debug().Msgf("layer: %v", layer)
 	return layer, nil
 }

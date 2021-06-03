@@ -6,6 +6,8 @@ import (
 	"image"
 	"io"
 	"os"
+
+	"github.com/rs/zerolog/log"
 )
 
 // Load loads a sprite
@@ -34,7 +36,7 @@ func Decode(f io.ReadSeeker) (*Sprite, error) {
 	if err != nil {
 		return nil, fmt.Errorf("readHeader: %w", err)
 	}
-	// log.Debug().Msgf("%s", header)
+	log.Debug().Msgf("header %s", header)
 	if header.depth != 32 &&
 		header.depth != 16 &&
 		header.depth != 8 {
